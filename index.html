@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PriHub - Support platform for individuals with cognitive disabilities">
+    <title>Prihub - Support for Cognitive Disabilities</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/typed.js@2.0.15/dist/typed.umd.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Initialize Firebase -->
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxQAl4zP1NUgswxOZRvNT0sMW2J_DwI6E",
+            authDomain: "prihub-8196c.firebaseapp.com",
+            projectId: "prihub-8196c",
+            storageBucket: "prihub-8196c.appspot.com",
+            messagingSenderId: "746365105856",
+            appId: "1:746365105856:web:9f74924c4180a549aedf25",
+            measurementId: "G-XXEFNFZ5WJ"
+        };
+
+        // Initialize Firebase
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            console.log('Firebase initialized successfully');
+        } catch (error) {
+            console.error('Firebase initialization error:', error.message);
+        }
+    </script>
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header">
+        <img src="https://ik.imagekit.io/o8qjepjebt/Screenshot%202025-06-01%20130550.png?updatedAt=1748763373354" width="130" height="30" alt="PriHub Logo">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="nav-container">
+                <div class="nav-links">
+                    <a href="#home" style="--i:1"><i class="fas fa-home"></i>Home</a>
+                    <a href="#about" style="--i:2"><i class="fas fa-info-circle"></i>About</a>
+                    <a href="#conditions" style="--i:3"><i class="fas fa-brain"></i>Conditions</a>
+                    <a href="#support" style="--i:4"><i class="fas fa-hands-helping"></i>Support</a>
+                    <a href="#resources" style="--i:5"><i class="fas fa-book"></i>Resources</a>
+                    <a href="#contact" style="--i:6"><i class="fas fa-envelope"></i>Contact</a>
+                </div>
+                <div class="auth-buttons">
+                    <button type="button" class="login-btn" onclick="showLoginModal()" style="--i:7">
+                        <i class="fas fa-sign-in-alt"></i>Login
+                    </button>
+                    <button type="button" class="signup-btn" onclick="showSignupModal()" style="--i:8">
+                        <i class="fas fa-user-plus"></i>Sign Up
+                    </button>
+                </div>
+                <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+                    <i class="fas fa-bars menu-icon"></i>
+                    <i class="fas fa-times close-icon"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+ <!-- Login Modal -->
+ <div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModals()">&times;</span>
+        <h2>Login</h2>
+        <div class="social-login">
+            <button class="social-btn google" onclick="handleSocialLogin('google')">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+            <button class="social-btn facebook" onclick="handleSocialLogin('facebook')">
+                <i class="fab fa-facebook-f"></i> Continue with Facebook
+            </button>
+            <button class="social-btn github" onclick="handleSocialLogin('github')">
+                <i class="fab fa-github"></i> Continue with GitHub
+            </button>
+        </div>
+        <div class="divider">
+            <span>or</span>
+        </div>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required>
+                <a href="#" class="forgot-password" onclick="showForgotPassword()">Forgot Password?</a>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Login</button>
+            </div>
+            <p class="form-footer">
+                Don't have an account? <a href="#" onclick="switchToSignup()">Sign up</a>
+            </p>
+        </form>
+    </div>
+</div>
+<!-- Signup Modal -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModals()">&times;</span>
+        <h2>Sign Up</h2>
+        <form id="signupForm" onsubmit="handleSignup(event)">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" required placeholder="Enter your first name">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" required placeholder="Enter your last name">
+            </div>
+            <div class="form-group">
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" required placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" required placeholder="Enter your password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </div>
+            <p class="form-footer">
+                Already have an account? <a href="#" onclick="switchToLogin()">Login</a>
+            </p>
+        </form>
+    </div>
+</div>
+<!-- Forgot Password Modal -->
+<div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModals()">&times;</span>
+        <h2>Reset Password</h2>
+        <p class="modal-description">Enter your email address and we'll send you instructions to reset your password.</p>
+        <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
+            <div class="form-group">
+                <label for="resetEmail">Email</label>
+                <input type="email" id="resetEmail" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Send Reset Link</button>
+            </div>
+            <p class="form-footer">
+                Remember your password? <a href="#" onclick="switchToLogin()">Login</a>
+            </p>
+        </form>
+    </div>
+</div>
+    <section class="home"id="home">
+         <div class="home-content">
+              <h2>Welcome to Prihub!</h2>
+              <h1>Understanding Cognitive Disabilities</h1>
+              <h4>We Provide <span class="text"></span></h4>
+              <br>Supporting individuals with cognitive disabilities through understanding, resources, and community and make a change in their life.</br>
+            <div class="home-sci">
+               <a href="https://www.linkedin.com/in/pranjal-khandelwal-1a46682a4/" style="--i:8"><i class="fab fa-linkedin"></i></a>
+               <a href="https://github.com/golu19102003" style="--i:9"><i class="fab fa-github"></i></a>
+               <a href="https://x.com/Pranjal76009498" style="--i:10"><i class="fab fa-twitter"></i></a>
+               <a href="https://www.facebook.com/profile.php?id=100095370905135"style="--i:11"><i  class="fab fa-facebook"></i></a>
+               <a href="https://www.instagram.com/pranjal19102003_2.0/" style="--i:12"><i  class="fab fa-instagram"></i></a>
+               </div>
+                <div class="cta-buttons">
+                    <a href="#support"class="btn-box primary">Get Support</a>
+                    <a href="#resources"class="btn-box secondary">Find Resources</a>
+                </div>
+            </div>
+         </div>
+      </div>     
+    <span class="home-imgHover"></span>
+    </section>
+
+    <section class="about" id="about">
+         <div class="about-content">
+              <img src="https://img.freepik.com/free-vector/parkinson-disease-abstract-concept-vector-illustration-parkinson-cause-treatment-age-depression-problem-disease-symptoms-progressive-nervous-system-disorder-tremor-abstract-metaphor_335657-1560.jpg?semt=ais_hybrid&w=740">
+         </div>
+         <div class="about-text">
+         <h2>About<span>Cognitive Disabilities</span></h2>
+         <p>Cognitive disabilities affect how a person learns, remembers, processes information, and makes decisions. We're here to provide support, understanding, and resources for individuals and families affected by cognitive disabilities.</p>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <i class='bx bx-brain' style="color:blue"></i>
+                        <h3>Understanding</h3>
+                        <p>Learn about different types of cognitive disabilities and how they affect daily life.Cognitive disabilities encompass a range of conditions affecting thinking, learning, and memory, which can significantly impact daily life.</p>
+                       
+                    </div>
+                    <div class="info-card">
+                        <i class='bx bx-help-circle'style="color:blue"></i>
+                        <h3>Support</h3>
+                        <p>Access professional help, support groups, and community resources. you can consider accessing professional help, joining support groups, and utilizing community resources. For emotional distress, the 988 Suicide & Crisis Lifeline offers 24/7 confidential support via call, text, or online chat.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class='bx bx-book-reader'style="color:blue"></i>
+                        <h3>Education</h3>
+                        <p>Educational resources and strategies for learning and development. A comprehensive learning and development (L&D) strategy outlines how an organization develops its workforce, aligning with business goals and addressing employee learning needs.</p>
+                    </div>
+                    <div class="info-card">
+                        <i class='bx bx-group'style="color:blue"></i>
+                        <h3>Community</h3>
+                        <p>Connect with others who understand and share similar experiences. Connecting with a community, especially one where individuals share similar experiences, is crucial for well-being. It fosters a sense of belonging, reduces feelings of isolation.</p>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section>
+         <div class="conditions" id="conditions">
+           <div class="container">
+              <h1 class="sub-title">Cognitive<span>Conditions</span></h1>
+              <div class="services-list">
+              <div>
+             <img src="https://pearlbuckcenter.com/content/uploads/2016/04/intellectual-disability.jpg" alt="Company Logo" style="width:50px; height:50px;color:blue">
+              <h2>Learning Disabilities</h2>
+              <p>Difficulties with reading, writing, math, or processing information can be indicators of learning disabilities, which are distinct from cognitive disabilities.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+            <div>
+             <img src="https://ik.imagekit.io/o8qjepjebt/Screenshot%202025-06-01%20172228.png?updatedAt=1748778774631" alt="Company Logo" style="width:50px; height:50px;color:#0ef">
+              <h2>ADHD</h2>
+              <p>ADHD, or Attention-Deficit/Hyperactivity Disorder, is a neurodevelopmental condition characterized by inattention, hyperactivity, and impulsivity, which can impact daily life and functioning & may persist into adulthood.  </p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+            <div>
+             <img src="https://www.shutterstock.com/image-vector/infinity-rainbow-symbol-polygonal-style-600nw-2303446797.jpg" style="width:50px; height:50px;color:#0ef">
+              <h2>Autism Spectrum</h2>
+              <p>Autism Spectrum Disorder (ASD) is a neurological disorder characterized by social/communication deficits and restricted and repetitive behaviours. Differences in social interaction, communication, and behavior patterns.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+            <div>
+             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnHmaLFpQ_ngx-1c6UXEAn7JKPvNOnUqkUSQ&s" style="width:50px; height:50px;color:#0ef">
+              <h2>Memory Disorders</h2>
+              <p>Memory disorders involve impairments in memory, including Alzheimer's disease, dementia, and amnesia. These disorders can affect short-term or long-term memory, impacting daily life and cognitive function. Treatment focuses on symptoms.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+                  <div>
+             <img src="https://www.nsedu.org/wp-content/uploads/2023/03/Developmental-Disabilities-Month.jpg" alt="Company Logo" style="width:50px; height:50px;color:#0ef">
+              <h2>Developmental Disorders</h2>
+              <p>Developmental Disorders are neurological conditions affecting brain development, leading to impairments in skills like language, social interaction, or learning.They can impact everyday functioning and usually last throughout a person's lifetime.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+            <div>
+             <img src="https://www.geetanjalihospital.co.in/img/media/cache/blogs/01/825x408/1010/neuro-blog-banner.jpg" style="width:50px; height:50px;color:#0ef">
+              <h2>Neurocognitive disorders</h2>
+              <p>Neurocognitive disorders involve a decline in brain function, impacting cognitive abilities like memory, attention, and language. They range from mild to severe, affecting daily life and independence. Among the most common are epilepsy, Alzheimer's, and stroke.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+            <div>
+             <img src="https://www.nctcog.org/getmedia/b4172307-a7e3-4bdb-b7ca-012798fd7f56/Dementia-logo.png" style="width:50px; height:50px;color:#0ef">
+              <h2>Dementia</h2>
+              <p>A progressive deterioration of brain function, leading to memory impairment, confusion, and difficulty concentrating. Dementia is marked by a severe decline in cognitive functions, such as thinking, reasoning, and remembering, to the extent that it interferes with the person's daily life. Dementia typically affects older adults, but it is not a normal part of the aging process.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+            <div>
+             <img src="https://thumbs.dreamstime.com/b/art-illustration-354277476.jpg" style="width:50px; height:50px;color:#0ef">
+              <h2>Traumatic Brain Injury</h2>
+              <p>A traumatic brain injury (TBI) is a type of brain injury caused by a blow penetration to the head. A TBI can occur during a fall, a car accident, from being hit on the head, tackled during a football game, or from a combat-related wound. After a TBI, nerve cells in the brain may be damaged.</p>
+                 <a href="#" class="read">Learn More</a>
+            </div>
+           </div>
+
+    <section>
+         <div id="support" id="support">
+              <div class="main-text" id="support">
+              <h2>Support<span>Services</span></h2>
+
+              <div class="portfolio-content">
+                   <div class="row">
+                        <img src="https://excelsia.edu.au/wp-content/uploads/2021/10/Professional-Development-Counselling-1024x683.jpg">
+                        <div class="layer">
+                        <h5>Professional Counseling</h5>
+                        <p>One-on-one therapy sessions with specialized therapists and counselors can be beneficial for individuals with cognitive disabilities. These sessions, often involving techniques like cognitive behavioral therapy (CBT), aim to help individuals develop coping mechanisms, improve social and communication skills, and manage challenging behaviors. Therapists can also provide support in areas like vocational training, assistive technology, and access to community resources. </p>
+                             <a href="#contact"class="read" style="color:aliceblue",margin-bottom:10px;>Schedule Session</a>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <img src="https://media.istockphoto.com/id/1454585686/photo/diversity-mental-health-and-group-therapy-counseling-support-meeting-healthy-conversation-and.jpg?s=612x612&w=0&k=20&c=7-kDTlCiMLzq_MM6yhnv7mZbyB7HWxM1n_JE5EkR9ZE=">
+                        <div class="layer">
+                        <h5>Support Groups</h5>
+                        <p>Guided group sessions and discussions can be highly beneficial for individuals with cognitive disabilities, offering opportunities for connection, skill development, and social interaction in a supportive environment. These sessions, often facilitated by therapists or trained professionals, provide a structured format for individuals to learn, practice, and share experiences.</p>
+                            <a href="#contact" class="read" style="color:aliceblue">Join Group</a>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <img src="https://health.ucdavis.edu/media-resources/contenthub/health-news/2022/12/thumbnail/mom-son-down-syndrome-th.jpg">
+                        <div class="layer">
+                        <h5>Educational Support</h5>
+                        <p>For individuals with cognitive disabilities, effective learning strategies and educational accommodations involve breaking down tasks, providing clear instructions, utilizing visual aids, and ensuring a supportive learning environment. Accommodations should focus on the how of learning, not the what, to allow students to access the curriculum equitably.</p>
+                            <a href="#contact" class="read"style="color:aliceblue">Learn More</a>
+                    </div>
+                    </div>
+              </div>
+         </div>
+         </div>
+    </section><section>
+         <div class="services" id="resources">
+           <div class="container">
+              <h1 class="sub-title">Helpful<span>Resources</span></h1>
+              <div class="services-list">
+              <div>
+                   <img src="https://www.deque.com/wp-content/uploads/2019/10/cognitive.png" alt="Company Logo" style="width:50px; height:50px;color:#0ef">
+                    <h2>Educational Materials</h2>
+                    <ul>
+                        <li>Learning Strategies</li>
+                        <li>Study Techniques</li>
+                        <li>Accommodation Guides</li>
+                        <li>Posters and Charts</li>
+                        <li>Flashcards</li>
+                        <li>Simplified Interfaces</li>
+                        <li>Picture Boards</li>
+                        <li>Models and Props</li>
+                    </ul>
+            </div>
+            
+            <div>
+             <img src="https://thumbs.dreamstime.com/b/professional-intellectual-disability-icon-inclusive-design-projects-intellectual-disability-icon-related-to-disability-ideal-359446407.jpg" alt="Company Logo" style="width:70px; height:50px;color:#0ef">
+              <h2>Video Resources</h2>
+              <ul>      <li>Mindfulness Videos for Teens</li>
+                        <li>Educational Videos</li>
+                        <li>Expert Interviews</li>
+                        <li>Success Stories</li>
+                        <li>Mental Health Awareness Month Campaign</li>
+                        <li>Video Library</li>
+                        <li>Intellectual Disability</li>
+                        <li>Special Education Categories</li>
+                    </ul>
+            </div>
+            <div>
+             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfPMoOpVwSYxgpxG0VeINVso46bbNXDAcuXQ&s" style="width:50px; height:50px;color:#0ef">
+              <h2>Useful Links</h2>
+              <li>Special Olympics: https://www.specialolympics.org/</li>
+              <li>NIMH: https://www.nimh.nih.gov/</li>
+              <li>W3C Web Accessibility Initiatives: https://www.w3.org/WAI/</li>
+              <li>https://adasitecompliance.com/</li>
+              <li>https://a11y.canada.ca/en/</li>
+              <p>To create content that is accessible to individuals with cognitive disabilities, focus on clear and concise language, use visual aids, and provide opportunities for personalization. Minimize distractions, offer filtering options, and ensure a logical flow of information. </p>
+            </div>
+           </div>
+         </div>
+         </div>
+    </section>
+    <section class="contact" id="contact">
+         <div class="contact-text">
+              <h1>Contact<span>Us</span></h1>
+              <h4>Get in touch</h4>
+              <p>That sounds like an incredible initiative! Prihub, created by us, is dedicated to inspiring and supporting individuals with cognitive disabilities. It likely provides resources, stories, and guidance to help users navigate challenges while fostering a community of encouragement and empowerment.</p>
+              <div class="contact-list">
+                   <li><i class='bx bxs-envelope'></i>pranjalgurdawasi@gmail.com</li>
+                   <li><i class="bx bxs-phone"></i>9680211602</li>
+                    <li><i class="bx bxs-map"></i>145,Goenka Vihar,Jaipur,Rajasthan</li>
+              </div>
+       
+         <div class="contact-icons">
+                <a href="https://www.linkedin.com/in/pranjal-khandelwal-1a46682a4/" style="--i:8"><i class="fab fa-linkedin"></i></a>
+               <a href="https://github.com/golu19102003" style="--i:9"><i class="fab fa-github"></i></a>
+               <a href="https://x.com/Pranjal76009498" style="--i:10"><i class="fab fa-twitter"></i></a>
+               <a href="https://www.facebook.com/profile.php?id=100095370905135"style="--i:11"><i  class="fab fa-facebook"></i></a>
+               <a href="https://www.instagram.com/pranjal19102003_2.0/" style="--i:12"><i  class="fab fa-instagram"></i></a>
+        </div>
+           </div>
+           <div class="contact-form">
+              <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                   <input type="text" id="contactName" placeholder="Enter Your Name" required>
+                   <input type="email" id="contactEmail" placeholder="Enter Your Email" required>
+                   <select name="inquiry-type" id="inquiryType" required>
+                       <option value="">Select Inquiry Type</option>
+                       <option value="support">Support Request</option>
+                       <option value="information">Information Request</option>
+                       <option value="appointment">Schedule Appointment</option>
+                   </select>
+                   <textarea name="" id="" cols="40" rows="10" placeholder="Enter Your Message" required></textarea>
+                   <input type="submit" value="submit" class="send">
+              </form>
+           </div>
+    </section>
+    <div class="last-text">
+         <p>Developed with love by Pranjal Khandelwal @2025</p>
+    </div>
+    <a href="#" class="top" onclick="scrollToTop(event)"><i class='bx bx-up-arrow-alt'></i></a>
+     <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#conditions">Conditions</a></li>
+                        <li><a href="#support">Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Emergency Support</h4>
+                    <p>24/7 Crisis Hotline: <a href="tel:988">988</a></p>
+                    <p>Always here to help</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Enter your email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Prihub. All rights reserved.</p>
+            </div>
+        </footer>
+        <button id="emergency-support" class="emergency-button">
+            🆘 24/7 Crisis Support
+        </button>
+    <script src="main.js"></script>
+    <script src="chatbot.js"></script>
+    <script src="cognitive-support.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Typing animation
+        var typed = new Typed(".text", {
+            strings: ["Support", "Resources", "Understanding", "Community"],
+            typeSpeed: 100,
+            backSpeed: 100,
+            backDelay: 5000,
+            startDelay: 500,
+            loop: true,
+            showCursor: false,
+            fadeOut: false,
+            autoInsertCss: true,
+            smartBackspace: false
+        });
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navbar = document.querySelector('.navbar');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navbar.classList.toggle('active');
+            const isExpanded = navbar.classList.contains('active');
+            mobileMenuBtn.setAttribute('aria-expanded', isExpanded);
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                navbar.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Close mobile menu when clicking on a nav link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navbar.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Scroll to top functionality
+        function scrollToTop(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const topButton = document.querySelector('.top');
+            if (window.scrollY > 300) {
+                topButton.style.opacity = '1';
+                topButton.style.pointerEvents = 'auto';
+            } else {
+                topButton.style.opacity = '0';
+                topButton.style.pointerEvents = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
