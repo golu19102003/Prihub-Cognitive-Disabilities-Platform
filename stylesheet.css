@@ -226,63 +226,86 @@ body {
         align-items: center;
         padding: 40px 0;
         transition: 0.5s ease-in-out;
+        z-index: 1001;
     }
-
     .navbar.active .nav-container {
         left: 0;
     }
-
     .nav-links {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100%;
         gap: 20px;
+        margin-top: 30px;
     }
-
     .nav-links a {
         font-size: 20px;
         opacity: 0;
         transform: translateX(-100px);
+        width: 90vw;
+        justify-content: flex-start;
+        background: none;
+        border: none;
+        text-align: left;
+        padding: 15px 20px;
+        border-radius: 8px;
+        transition: background 0.3s, color 0.3s;
     }
-
     .navbar.active .nav-links a {
         opacity: 1;
         transform: translateX(0);
         transition: 0.5s ease;
     }
-
+    .nav-links a:hover {
+        background: #012290f7;
+        color: #fff;
+    }
     .auth-buttons {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 30px;
+        margin-top: 20px;
         gap: 15px;
+        width: 100%;
     }
-
     .auth-buttons button {
         opacity: 0;
         transform: translateX(-100px);
+        width: 90vw;
+        justify-content: flex-start;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 20px;
+        background: none;
+        border: none;
+        color: #fff;
+        text-align: left;
+        transition: background 0.3s, color 0.3s;
     }
-
     .navbar.active .auth-buttons button {
         opacity: 1;
         transform: translateX(0);
         transition: 0.5s ease;
-        animation-delay: calc(.2s * var(--i));
     }
-
-    .login-btn {
-        --i: 7;
+    .auth-buttons button:hover {
+        background: #012290f7;
+        color: #fff;
     }
-
-    .signup-btn {
-        --i: 8;
+    .mobile-menu-btn {
+        z-index: 1100;
     }
-
-    .login-btn, .signup-btn {
-        width: 200px;
-        justify-content: center;
+    .mobile-menu-btn .menu-icon {
+        display: block;
+    }
+    .mobile-menu-btn .close-icon {
+        display: none;
+    }
+    .navbar.active .mobile-menu-btn .menu-icon {
+        display: none;
+    }
+    .navbar.active .mobile-menu-btn .close-icon {
+        display: block;
     }
 }
 

@@ -1026,6 +1026,47 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.add('dyslexic-font');
         addDyslexiaStyles();
     }
+
+   
+    // Add Accessibility Feedback Button
+    let feedbackBtn = document.querySelector('.feedback-btn');
+    if (!feedbackBtn) {
+        feedbackBtn = document.createElement('button');
+        feedbackBtn.className = 'quick-btn feedback-btn';
+        feedbackBtn.setAttribute('aria-label', 'Accessibility feedback');
+        feedbackBtn.innerHTML = '<i class="fas fa-comment-dots"></i>';
+        document.querySelector('.quick-access-bar').appendChild(feedbackBtn);
+    }
+    feedbackBtn.addEventListener('click', () => {
+        showFeedbackModal();
+    });
+    function showFeedbackModal() {
+        let modal = document.getElementById('accessibilityFeedbackModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'accessibilityFeedbackModal';
+            modal.className = 'modal show';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width:400px;">
+                    <span class="close" onclick="document.getElementById('accessibilityFeedbackModal').remove()">&times;</span>
+                    <h2>Accessibility Feedback</h2>
+                    <form id="feedbackForm">
+                        <div class="form-group">
+                            <label for="feedbackText" style="text-align:center">Your feedback or suggestions:</label>
+                            <textarea id="feedbackText" required style="min-height:80px;width:100%;box-sizing:border-box;bottom-margin:10px;padding:2.25rem 1.5rem;"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn" style="width:100%">Send</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showNotification('Thank you for your feedback!', 'info');
+                modal.remove();
+            });
+        }
+    }
 });
 
 // Newsletter Subscribe Functionality
@@ -1119,3 +1160,42 @@ function showContactNotification(message, bgColor, color) {
   document.body.appendChild(notification);
   setTimeout(() => notification.remove(), 4000);
 }
+
+// Breadcrumb update logic
+function updateBreadcrumb() {
+  const pathMap = {
+    '#home': 'Home',
+    '#about': 'Home > About',
+    '#conditions': 'Home > Conditions',
+    '#support': 'Home > Support',
+    '#resources': 'Home > Resources',
+    '#contact': 'Home > Contact'
+  };
+  let hash = window.location.hash || '#home';
+  const breadcrumb = document.getElementById('breadcrumb-path');
+  if (breadcrumb) {
+    breadcrumb.textContent = pathMap[hash] || 'Home';
+  }
+}
+window.addEventListener('hashchange', updateBreadcrumb);
+document.addEventListener('DOMContentLoaded', updateBreadcrumb);
+
+// Auto-save and restore for contact form fields
+function setupContactFormAutoSave() {
+  const form = document.getElementById('contactForm');
+  if (!form) return;
+  const fields = form.querySelectorAll('input, textarea, select');
+  // Restore
+  fields.forEach(field => {
+    const saved = localStorage.getItem('contact_' + field.id);
+    if (saved) field.value = saved;
+    field.addEventListener('input', () => {
+      localStorage.setItem('contact_' + field.id, field.value);
+    });
+  });
+  // Clear on submit
+  form.addEventListener('submit', () => {
+    fields.forEach(field => localStorage.removeItem('contact_' + field.id));
+  });
+}
+document.addEventListener('DOMContentLoaded', setupContactFormAutoSave);
