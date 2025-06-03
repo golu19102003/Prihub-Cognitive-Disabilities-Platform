@@ -190,23 +190,17 @@ body {
     width: 30px;
     height: 30px;
     justify-content: center;
-    transition: transform 0.3s ease;
 }
 
 .mobile-menu-btn .menu-icon,
 .mobile-menu-btn .close-icon {
     position: absolute;
-    transition: all 0.3s ease;
-}
-
-.mobile-menu-btn .menu-icon {
-    opacity: 1;
-    transform: rotate(0) scale(1);
+    transition: 0.5s ease;
 }
 
 .mobile-menu-btn .close-icon {
     opacity: 0;
-    transform: rotate(-180deg) scale(0);
+    transform: rotate(-180deg);
 }
 
 .navbar.active .mobile-menu-btn .menu-icon {
@@ -738,9 +732,9 @@ margin-right: 15px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 .contact-form form .send:hover {
-     box-shadow: 0 0 5px #fff,
-        0 0 25px #fff, 0 0 50px #fff,
-        0 0 100px #fff, 0 0 200px #fff;
+     box-shadow: 0 0 5px #012290f7,
+        0 0 25px #012290f7, 0 0 50px #012290f7,
+        0 0 100px #012290f7, 0 0 200px #012290f7;
 }
 .last-text p{
     width: 100%;

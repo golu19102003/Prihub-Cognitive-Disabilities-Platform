@@ -219,29 +219,3 @@ scrollTopBtn.addEventListener('click', (e) => {
     });
 });
 
-// Mobile Menu Button Toggle
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const menuIcon = mobileMenuBtn.querySelector('.menu-icon');
-const closeIcon = mobileMenuBtn.querySelector('.close-icon');
-
-mobileMenuBtn.addEventListener('click', () => {
-    // Toggle active class on navbar
-    const navbar = mobileMenuBtn.closest('.navbar');
-    navbar.classList.toggle('active');
-
-    // Rotate button and toggle icons
-    if (navbar.classList.contains('active')) {
-        menuIcon.style.opacity = '0';
-        menuIcon.style.transform = 'rotate(180deg) scale(0)';
-        closeIcon.style.opacity = '1';
-        closeIcon.style.transform = 'rotate(0) scale(1)';
-        mobileMenuBtn.style.transform = 'rotate(180deg)';
-    } else {
-        menuIcon.style.opacity = '1';
-        menuIcon.style.transform = 'rotate(0) scale(1)';
-        closeIcon.style.opacity = '0';
-        closeIcon.style.transform = 'rotate(-180deg) scale(0)';
-        mobileMenuBtn.style.transform = 'rotate(0)';
-    }
-});
-
