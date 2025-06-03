@@ -158,7 +158,7 @@ style.textContent = `
   .text-size-controls {
     position: fixed;
     top: 100px;
-    right: 20px;
+    left: 20px;
     background: white;
     padding: 10px;
     border-radius: 5px;
