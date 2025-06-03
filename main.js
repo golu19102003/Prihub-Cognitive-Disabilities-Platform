@@ -219,3 +219,73 @@ scrollTopBtn.addEventListener('click', (e) => {
     });
 });
 
+// Mobile Menu Toggle Functionality
+document.addEventListener('DOMContentLoaded', () => {
+  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+  const navbar = document.querySelector('.navbar');
+  const menuIcon = document.querySelector('.menu-icon');
+  const closeIcon = document.querySelector('.close-icon');
+
+  function openMenu() {
+    navbar.classList.add('active');
+    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+    menuIcon.style.opacity = '0';
+    menuIcon.style.transform = 'rotate(180deg)';
+    closeIcon.style.opacity = '1';
+    closeIcon.style.transform = 'rotate(0)';
+    document.addEventListener('click', handleOutsideClick);
+  }
+
+  function closeMenu() {
+    navbar.classList.remove('active');
+    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    menuIcon.style.opacity = '1';
+    menuIcon.style.transform = 'rotate(0)';
+    closeIcon.style.opacity = '0';
+    closeIcon.style.transform = 'rotate(-180deg)';
+    document.removeEventListener('click', handleOutsideClick);
+  }
+
+  function handleOutsideClick(e) {
+    if (
+      !navbar.contains(e.target) &&
+      !mobileMenuBtn.contains(e.target)
+    ) {
+      closeMenu();
+    }
+  }
+
+  mobileMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent the click from bubbling up
+    if (navbar.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  // Close mobile menu when clicking on a nav link
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  // Prevent clicks on login/signup buttons from closing the menu
+  const loginButton = document.querySelector('.login-button');
+  const signupButton = document.querySelector('.signup-button');
+
+  if (loginButton) {
+    loginButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Your login logic here
+    });
+  }
+
+  if (signupButton) {
+    signupButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Your signup logic here
+    });
+  }
+});
