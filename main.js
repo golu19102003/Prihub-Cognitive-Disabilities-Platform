@@ -505,11 +505,97 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Dyslexia Font Toggle
     const dyslexiaToggle = document.querySelector('.dyslexia-font');
+    let dyslexiaActive = false;
     dyslexiaToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dyslexic-font');
-        const isDyslexicFont = document.body.classList.contains('dyslexic-font');
-        localStorage.setItem('dyslexicFont', isDyslexicFont);
+        dyslexiaActive = !dyslexiaActive;
+        document.body.classList.toggle('dyslexic-font', dyslexiaActive);
+        if (dyslexiaActive) {
+            addDyslexiaStyles();
+            localStorage.setItem('dyslexicFont', true);
+            showNotification('Dyslexia-friendly font enabled', 'info');
+        } else {
+            removeDyslexiaStyles();
+            localStorage.setItem('dyslexicFont', false);
+            showNotification('Dyslexia-friendly font disabled', 'info');
+        }
     });
+
+    // Add text-to-speech button to quick-access-bar
+    let ttsBtn = document.querySelector('.tts-btn');
+    if (!ttsBtn) {
+        ttsBtn = document.createElement('button');
+        ttsBtn.className = 'quick-btn tts-btn';
+        ttsBtn.setAttribute('aria-label', 'Read selected text aloud');
+        ttsBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        document.querySelector('.quick-access-bar').appendChild(ttsBtn);
+    }
+    // Add stop button for TTS
+    let ttsStopBtn = document.querySelector('.tts-stop-btn');
+    if (!ttsStopBtn) {
+        ttsStopBtn = document.createElement('button');
+        ttsStopBtn.className = 'quick-btn tts-stop-btn';
+        ttsStopBtn.setAttribute('aria-label', 'Stop text-to-speech');
+        ttsStopBtn.innerHTML = '<i class="fas fa-stop"></i>';
+        document.querySelector('.quick-access-bar').appendChild(ttsStopBtn);
+    }
+    ttsStopBtn.addEventListener('click', () => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            showNotification('Text-to-speech stopped.', 'info');
+        }
+    });
+    ttsBtn.addEventListener('click', () => {
+        const selection = window.getSelection().toString();
+        if (selection) {
+            speakText(selection);
+        } else {
+            showNotification('Select text to read aloud.', 'info');
+        }
+    });
+
+    function speakText(text) {
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.lang = document.documentElement.lang || 'en-US';
+            window.speechSynthesis.speak(utterance);
+        } else {
+            showNotification('Text-to-speech not supported in this browser.', 'error');
+        }
+    }
+
+    function addDyslexiaStyles() {
+        if (document.getElementById('dyslexia-style')) return;
+        const style = document.createElement('style');
+        style.id = 'dyslexia-style';
+        style.textContent = `
+            body.dyslexic-font, body.dyslexic-font *:not(button):not(i):not(.fa):not([class*='icon']):not([class*='btn']) {
+                font-family: 'OpenDyslexic', Arial, sans-serif !important;
+                background-color: #f6f6e9 !important;
+                color: #222 !important;
+                letter-spacing: 0.08em !important;
+                word-spacing: 0.16em !important;
+                line-height: 1.7 !important;
+                transition: background 0.3s, color 0.3s;
+            }
+            body.dyslexic-font ::selection {
+                background: #ffe066 !important;
+                color: #222 !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    function removeDyslexiaStyles() {
+        const style = document.getElementById('dyslexia-style');
+        if (style) style.remove();
+    }
+    // Restore user preference
+    if (localStorage.getItem('dyslexicFont') === 'true') {
+        dyslexiaActive = true;
+        document.body.classList.add('dyslexic-font');
+        addDyslexiaStyles();
+    }
 
     // Translation Button
     const translateBtn = document.querySelector('.translate-btn');
@@ -912,6 +998,51 @@ document.addEventListener('DOMContentLoaded', function() {
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
     if (localStorage.getItem('dyslexicFont') === 'true') {
+        dyslexiaActive = true;
         document.body.classList.add('dyslexic-font');
+        addDyslexiaStyles();
     }
+});
+
+// Newsletter Subscribe Functionality
+// Wait for DOMContentLoaded to ensure footer exists
+
+document.addEventListener('DOMContentLoaded', function() {
+  const newsletterForm = document.querySelector('.newsletter-form');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const emailInput = newsletterForm.querySelector('input[type="email"]');
+      if (!emailInput.value.trim()) {
+        showNewsletterNotification('Please enter your email address.', 'error');
+        return;
+      }
+      // Optionally, add email validation here
+      showNewsletterNotification('Successfully subscribed!', 'success');
+      emailInput.value = '';
+    });
+  }
+
+  function showNewsletterNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = 'newsletter-success-msg';
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.bottom = '18px';
+    notification.style.right = '10px';
+    notification.style.left = '75%';
+    notification.style.textAlign = 'center' ;
+    notification.style.animation = 'slideLeft .5s ease forwards';
+    notification.style.animationDelay = 'calc(.2s * var(--i))';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.background = '#012290f7';
+    notification.style.color = '#fff';
+    notification.style.padding = '1rem 2rem';
+    notification.style.borderRadius = '8px';
+    notification.style.zIndex = '2000';
+    notification.style.fontSize = '1.1rem';
+    notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 3000);
+  }
 });
