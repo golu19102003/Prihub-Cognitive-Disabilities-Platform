@@ -701,18 +701,19 @@ border: none;
 outline: none;
 width: 80%;
 padding: 18px;
-background: #9dabd9f7;
+background: #bbc5e3;
 color: #000;
 font-size: 1rem;
 font-weight: 600;
 margin-bottom: 0.5rem;
 border-radius: 0.5rem;
 margin-right: 15px;
-border: 2px solid #0053b8f7;
+border: 2px solid #012290f7;
 }
 .contact-form textarea{
     resize: none;
     height: 220px;
+    background: #bbc5e3;
 }
 .contact-form form .send{
     display: inline-block;
@@ -727,9 +728,9 @@ border: 2px solid #0053b8f7;
     opacity: 0;
     animation: slideTop 1s ease forwards;
     animation-delay: 2s;
-    box-shadow: 1px 1px 20px #012290f7,
-            1px 1px 40px #0053b8f7;
-    border: 2px solid #0053b8f7;
+    box-shadow: 0 0 5px #bbc5e3,
+        0 0 25px #bbc5e3;
+    border: 2px solid #bbc5e3;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 .contact-form form .send:hover {
