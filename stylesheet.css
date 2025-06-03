@@ -598,7 +598,7 @@ body {
     margin-bottom: 30px;
 }
 .layer i {
-    color: #ff004f;
+    color: #fff;
     margin-top: 20px;
     font-size: 20px;
     background: #fff;
@@ -666,8 +666,8 @@ body {
 }
 .contact-list li a:hover{
          box-shadow: 0 0 5px #bbc5e3,
-        0 0 25px #cdd6f3, 0 0 50px #c4cce7,
-        0 0 100px #d8e1ff, 0 0 200px #cdd6f0;
+        0 0 25px #bbc5e3, 0 0 50px #bbc5e3,
+        0 0 100px #bbc5e3, 0 0 200px #bbc5e3;
 }
 .contact-icons i{
  display: inline-flex;
@@ -701,13 +701,14 @@ border: none;
 outline: none;
 width: 80%;
 padding: 18px;
-background: #061136;
-color: #fff;
+background: #9dabd9f7;
+color: #000;
 font-size: 1rem;
 font-weight: 600;
 margin-bottom: 0.5rem;
 border-radius: 0.5rem;
 margin-right: 15px;
+border: 2px solid #0053b8f7;
 }
 .contact-form textarea{
     resize: none;
@@ -726,15 +727,15 @@ margin-right: 15px;
     opacity: 0;
     animation: slideTop 1s ease forwards;
     animation-delay: 2s;
-    box-shadow: 0 0 5px #012290f7,
-        0 0 25px #0053b8f7;
-    border: 2px solid #012290f7;
+    box-shadow: 1px 1px 20px #012290f7,
+            1px 1px 40px #0053b8f7;
+    border: 2px solid #0053b8f7;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 .contact-form form .send:hover {
-     box-shadow: 0 0 5px #fff,
-        0 0 25px #8099eaf7, 0 0 50px #8099eaf7,
-        0 0 100px #8099eaf7, 0 0 200px #8099eaf7;
+     box-shadow: 0 0 5px #bbc5e3,
+        0 0 25px #bbc5e3, 0 0 50px #bbc5e3,
+        0 0 100px #bbc5e3, 0 0 200px #bbc5e3;
 }
 .last-text p{
     width: 100%;
@@ -1040,13 +1041,7 @@ footer {
     display: none;
 }
 
-[role="alert"] {
-    background-color: var(--error-color);
-    color: black;
-    padding: 1rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-}
+
 
 /* Chatbot Styles */
 .chat-container {

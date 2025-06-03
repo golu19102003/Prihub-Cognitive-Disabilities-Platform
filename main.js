@@ -103,7 +103,6 @@ function validateForm(formElement) {
   inputs.forEach(input => {
     if (input.hasAttribute('required') && !input.value.trim()) {
       isValid = false;
-      showError(input, 'This field is required');
     } else if (input.type === 'email' && input.value) {
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(input.value)) {
@@ -187,13 +186,13 @@ style.textContent = `
   }
   
   .error-message {
-    color: #E74C3C;
+    color: #fff;
     font-size: 0.9em;
     margin-top: 5px;
   }
   
   [aria-invalid="true"] {
-    border-color: #E74C3C !important;
+    border-color: #fff !important;
   }
 `;
 document.head.appendChild(style);
@@ -234,6 +233,21 @@ document.addEventListener('DOMContentLoaded', () => {
     closeIcon.style.opacity = '1';
     closeIcon.style.transform = 'rotate(0)';
     document.addEventListener('click', handleOutsideClick);
+
+    // Animate nav icons sliding from menu-btn (mobile only)
+    if (window.innerWidth <= 768) {
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach((link, i) => {
+        link.style.transition = 'none';
+        link.style.opacity = '0';
+        link.style.transform = 'translateX(-100px)';
+        setTimeout(() => {
+          link.style.transition = 'opacity 0.5s, transform 0.5s';
+          link.style.opacity = '1';
+          link.style.transform = 'translateX(0)';
+        }, 100 + i * 80);
+      });
+    }
   }
 
   function closeMenu() {
@@ -244,6 +258,16 @@ document.addEventListener('DOMContentLoaded', () => {
     closeIcon.style.opacity = '0';
     closeIcon.style.transform = 'rotate(-180deg)';
     document.removeEventListener('click', handleOutsideClick);
+
+    // Reset nav icon styles (mobile only)
+    if (window.innerWidth <= 768) {
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach(link => {
+        link.style.transition = '';
+        link.style.opacity = '';
+        link.style.transform = '';
+      });
+    }
   }
 
   function handleOutsideClick(e) {
@@ -1046,3 +1070,52 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => notification.remove(), 3000);
   }
 });
+
+// Contact form submit handler for custom success message
+function handleContactSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+  if (validateForm(form)) {
+    // Show custom success message
+    showContactNotification(
+      'Message is successfully submitted, Thanks for choosing Prihub! our team will shortly Contact to you!',
+      '#012290f7',
+      '#fff'
+    );
+    // Remove error styles from all fields
+    const inputs = form.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+      input.removeAttribute('aria-invalid');
+      const errorDiv = input.parentElement.querySelector('.error-message');
+      if (errorDiv) errorDiv.remove();
+      input.style.borderColor = '';
+    });
+    // Optionally, reset the form
+    form.reset();
+  }
+}
+
+function showContactNotification(message, bgColor, color) {
+  const notification = document.createElement('div');
+  notification.className = 'contact-success-msg';
+  notification.textContent = message;
+  notification.style.position = 'fixed';
+  notification.style.bottom = '18px';
+  notification.style.right = '10px';
+  notification.style.left = '20%';
+  notification.style.textAlign = 'center';
+  notification.style.animation = 'slideLeft .5s ease forwards';
+    notification.style.animationDelay = 'calc(.2s * var(--i))';
+    notification.style.transform = 'translateX(-50%)';
+  notification.style.background = '#012290f7';
+  notification.style.color = '#fff';
+  notification.style.padding = '1rem 2rem';
+  notification.style.borderRadius = '8px';
+  notification.style.zIndex = '2000';
+  notification.style.fontSize = '1.1rem';
+  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  notification.style.animation = 'slideLeft .5s ease forwards';
+  notification.style.animationDelay = 'calc(.2s * var(--i))';
+  document.body.appendChild(notification);
+  setTimeout(() => notification.remove(), 4000);
+}
