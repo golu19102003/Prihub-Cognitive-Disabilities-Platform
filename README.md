@@ -1,7 +1,7 @@
 ![Screenshot 2025-06-03 215434](https://github.com/user-attachments/assets/a88b79dc-3f98-4244-9c25-eec9d92ce5b7)
 Here is a detailed `README.md` for your PriHub Cognitive Disabilities Platform, including an explanation of the main code sequences and project structure:
 ---
-# PriHub – Cognitive Disabilities Platform
+# PriHub – Support for Cognitive Disabilities Platform
 PriHub is a web platform designed to support individuals with cognitive disabilities by providing accessible resources, community support, and interactive tools. The platform emphasizes accessibility, clear communication, and user empowerment.
 ---
 ## Table of Contents
