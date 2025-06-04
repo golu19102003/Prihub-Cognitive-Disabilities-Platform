@@ -1,0 +1,3 @@
+<!-- ✅ Boxicons CDN
+Used to include lightweight modern icon sets. Often used with classes like 'bx bx-user', etc. -->
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>

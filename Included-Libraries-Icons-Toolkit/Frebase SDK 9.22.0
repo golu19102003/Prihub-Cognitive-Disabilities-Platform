@@ -1,0 +1,10 @@
+<!-- 🔹 firebase-app-compat.js: Initializes the Firebase app with your config -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
+<!-- 🔹 firebase-auth-compat.js: Enables user authentication
+Supports login/logout using email-password, Google, Facebook, GitHub, etc. -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<!-- 🔹 firebase-firestore-compat.js: Connects to Firebase Firestore database
+Used to store and retrieve real-time data like user profiles, messages, tasks, etc. -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
