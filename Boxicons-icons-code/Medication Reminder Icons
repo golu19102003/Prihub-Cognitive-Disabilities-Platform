@@ -1,0 +1,10 @@
+<!--Close-Icons-->
+<i class="fas fa-times"></i>
+<!--Pills/Medicine-Icons-->
+<i class="fas fa-pills" style="margin-right: 10px; color: #012290f7;"></i>
+<!--Day-Icons-->
+<i class="fas fa-calendar-day"></i>
+<!--Week-Icons-->
+<i class="fas fa-calendar-week"></i>
+<!--Custom-Icons-->
+<i class="fas fa-calendar-alt"></i>
