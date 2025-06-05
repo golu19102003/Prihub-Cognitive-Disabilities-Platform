@@ -962,6 +962,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
+            // Show the notification immediately after submitting
+            showNotification('Medication Reminder Set Successfully', 'success');
             modal.classList.remove('show');
             setTimeout(() => modal.remove(), 300);
         });
@@ -994,7 +996,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }, 7 * 24 * 60 * 60 * 1000);
                 }
 
-                showNotification(`Reminder set for ${config.medication}`, 'success');
+                // Show the custom success message
+                showNotification('Medication Reminder Set Successfully', 'success');
             }
         }
 
@@ -1056,6 +1059,20 @@ document.addEventListener('DOMContentLoaded', function() {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
+        // Custom style for medication reminder and login/signup success
+        if (
+            (message === 'Medication Reminder Set Successfully' && type === 'success') ||
+            (type === 'success' && (
+                message.toLowerCase().includes('login successful') ||
+                message.toLowerCase().includes('signup successful') ||
+                message.toLowerCase().includes('logged in successfully') ||
+                message.toLowerCase().includes('welcome back') ||
+                message.toLowerCase().includes('welcome,')
+            ))
+        ) {
+            notification.style.background = '#012290f7';
+            notification.style.color = '#fff';
+        }
         document.body.appendChild(notification);
         setTimeout(() => notification.remove(), 3000);
     }
