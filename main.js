@@ -158,7 +158,7 @@ style.textContent = `
   .text-size-controls {
     position: fixed;
     top: 100px;
-    left: 20px;
+    left: 10px;
     background: white;
     padding: 10px;
     border-radius: 5px;
@@ -167,7 +167,7 @@ style.textContent = `
   }
   
   .text-size-controls button {
-    margin: 0 5px;
+    margin: 0 5px 0 5px;
     padding: 5px 10px;
     border: 1px solid #4A90E2;
     background: white;
@@ -193,6 +193,50 @@ style.textContent = `
   
   [aria-invalid="true"] {
     border-color: #fff !important;
+  }
+
+  .quick-access-bar {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #012290f7;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 999;
+  }
+
+  .emergency-button {
+    position: fixed;
+    left: 10px;
+    bottom: 30px;
+    z-index: 1100;
+  }
+
+  .chat-icon {
+    position: fixed;
+    right: 10px;
+    bottom: 80px;
+    z-index: 1100;
+  }
+
+  .cognitive-support-container {
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+  }
+
+  .top {
+    position: fixed;
+    right: 20px;
+    bottom: 17px;
+    z-index: 1100;
   }
 `;
 document.head.appendChild(style);
@@ -340,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function() {
     newStyles.textContent = `
         .quick-access-bar {
             position: fixed;
-            left: 20px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             display: flex;

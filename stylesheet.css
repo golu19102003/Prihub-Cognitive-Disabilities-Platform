@@ -479,7 +479,7 @@ body {
     grid-template-columns: repeat(auto-fit,minmax(259px,1fr));
     grid-gap: 40px;
     margin-top: 40px;
-    margin-left: 40px;
+    margin-left: 50px;
     margin-right: 40px;
 
 }
@@ -576,6 +576,7 @@ body {
 }
 .portfolio-content{
     display: grid;
+    margin-left: 50px;
     grid-template-columns: repeat(auto-fit, minmax(350px, auto));
 }
 .row{
@@ -589,7 +590,7 @@ body {
     height: 60%;
     background: transform 0.5s;
     margin-top: 150px;
-    margin-left: 25px;
+    margin-left: 50px;
     align-items: center;
 }
 .layer{
@@ -650,7 +651,7 @@ body {
 .contact-text h1{
     font-size: 60px;
     line-height: 1;
-    margin-left: 3px;
+    margin-left: 45px;
 }
 .contact-text h1 span{
     color: #012290f7;
@@ -661,14 +662,14 @@ body {
     color: #000;
     font-size: 20px;
     font-weight: 600;
-    margin-left: 10px;
+    margin-left: 48px;
 }
 .contact-text p{
     color: #000;
     font-size: 20px;
     line-height: 30px;
     margin-bottom: 2rem;
-    margin-left: 10px;
+    margin-left: 48px;
 }
 .contact-list {
     margin-bottom: 3rem;
@@ -676,7 +677,7 @@ body {
 .contact-list li{
     margin-bottom: 10px;
     display: block;
-    margin-left: 6px;
+    margin-left: 40px;
 }
 
 .contact-list i{
@@ -691,6 +692,10 @@ body {
          box-shadow: 0 0 5px #bbc5e3,
         0 0 25px #bbc5e3, 0 0 50px #bbc5e3,
         0 0 100px #bbc5e3, 0 0 200px #bbc5e3;
+}
+.contact-icons {
+    margin-left: 48px;
+    margin-bottom: 20px;
 }
 .contact-icons i{
  display: inline-flex;
@@ -772,8 +777,8 @@ border: 2px solid #012290f7;
 }
 .top{
     position: fixed;
-    bottom: 2.1rem;
-    right: 2.1rem;
+    bottom: 2.0rem;
+    right: 1.2rem;
 }
 .top i{
     color: #fff;
@@ -993,7 +998,7 @@ footer {
 .emergency-button {
     position: fixed;
     bottom: 2rem;
-    left: 2rem;
+    left: 0.9rem;
     padding: 1rem 2rem;
     background-color: #012290f7;
     color: white;
@@ -1071,7 +1076,7 @@ footer {
 .chat-container {
     position: fixed;
     bottom: 80px;
-    right: 20px;
+    right: 10px;
     z-index: 1000;
 }
 
@@ -1379,7 +1384,7 @@ footer {
 /* Cognitive Support Styles */
 .cognitive-support-container {
     position: fixed;
-    right: 20px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
