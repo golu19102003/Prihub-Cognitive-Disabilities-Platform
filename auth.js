@@ -192,7 +192,19 @@ function updateUIForLoggedInUser(user) {
             <div class="dropdown-menu">
                 <a href="#profile">Profile</a>
                 <a href="#settings">Settings</a>
-                <a href="handleLogout()">Logout</a>
+                <button onclick="handleLogout()" style="
+    margin-top: 6px;
+    color: #FFFFFF;
+    background-color: #1E90FF;
+    padding: 8px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;>Logout</button>
             </div>
         </div>
     `;
