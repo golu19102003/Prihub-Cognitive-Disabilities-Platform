@@ -192,23 +192,75 @@ function updateUIForLoggedInUser(user) {
             <div class="dropdown-menu">
                 <a href="#profile">Profile</a>
                 <a href="#settings">Settings</a>
-                <button onclick="handleLogout()" style="
-    margin-top: 6px;
-    color: #FFFFFF;
-    background-color: #1E90FF;
-    padding: 8px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-    min-width: 100px;
-    text-align: center;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;>Logout</button>
+                <button onclick="handleLogout()">Logout</button>
             </div>
         </div>
     `;
 }
+document.addEventListener('DOMContentLoaded', function() {
+  const dropdownMenu = document.querySelector('.dropdown-menu');
+  if (!dropdownMenu) return;
+
+  // Apply styles to the dropdown menu container
+  Object.assign(dropdownMenu.style, {
+    position: 'absolute',
+    top: '100%',
+    right: '0',
+    backgroundColor: '#fff',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    padding: '0.5rem',
+    marginTop: '0.5rem',
+    display: 'none',
+    zIndex: '1000'
+  });
+
+  // Function to apply uniform styles to menu items
+  function styleMenuItem(item) {
+    Object.assign(item.style, {
+      display: 'block',
+      padding: '0.5rem 1rem',
+      color: '#333',
+      textDecoration: 'none',
+      width: '100%',
+      textAlign: 'left',
+      background: 'none',
+      border: 'none',
+      fontSize: '1rem',
+      cursor: 'pointer',
+      borderRadius: '4px',
+      transition: 'background-color 0.3s, color 0.3s'
+    });
+
+    // Hover effect
+    item.addEventListener('mouseenter', function() {
+      item.style.backgroundColor = '#f5f5f5';
+      item.style.color = '#012290f7';
+    });
+
+    item.addEventListener('mouseleave', function() {
+      item.style.backgroundColor = 'none';
+      item.style.color = '#333';
+    });
+  }
+
+  // Apply styles to all <a> and <button> elements within the dropdown
+  const menuItems = dropdownMenu.querySelectorAll('a, button');
+  menuItems.forEach(styleMenuItem);
+
+  // Show dropdown on hover
+  const userMenu = document.querySelector('.user-menu');
+  if (userMenu) {
+    userMenu.addEventListener('mouseenter', function() {
+      dropdownMenu.style.display = 'block';
+    });
+
+    userMenu.addEventListener('mouseleave', function() {
+      dropdownMenu.style.display = 'none';
+    });
+  }
+});
+
 
 async function handleLogout() {
     try {
