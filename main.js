@@ -1481,9 +1481,10 @@ document.addEventListener('DOMContentLoaded', function() {
   aiSearchBtn.innerHTML = '<i class="fas fa-search"></i>';
   aiSearchBtn.style.position = 'fixed';
   aiSearchBtn.style.right = '18px';
-  aiSearchBtn.style.top = '275px';
+  aiSearchBtn.style.top = '280px';
   aiSearchBtn.style.zIndex = '1200';
   document.body.appendChild(aiSearchBtn);
+
 
   // --- Modals ---
   // AI Search Modal
@@ -1491,6 +1492,12 @@ document.addEventListener('DOMContentLoaded', function() {
   aiSearchModal.className = 'modal ai-search-modal';
   aiSearchModal.innerHTML = `<div class="modal-content"><span class="close" id="closeAISearch">&times;</span><h2>AI Search</h2><input type="text" placeholder="Type to search..." class="ai-search-input"><div class="ai-search-results">(Suggestions will appear here)</div></div>`;
   document.body.appendChild(aiSearchModal);
+
+  // Accessibility Widget Modal
+  let accessModal = document.createElement('div');
+  accessModal.className = 'modal access-modal';
+  accessModal.innerHTML = `<div class="modal-content"><span class="close" id="closeAccess">&times;</span><h2>Accessibility Tools</h2><button class="unified-btn">Check Contrast</button><button class="unified-btn">Font Size</button><button class="unified-btn">Dyslexia Mode</button></div>`;
+  document.body.appendChild(accessModal);
 
   // Dashboard Modal
   let dashboardModal = document.createElement('div');
@@ -1506,9 +1513,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // --- Event Listeners for opening/closing modals ---
   aiSearchBtn.onclick = () => aiSearchModal.style.display = 'flex';
+  accessWidgetBtn.onclick = () => accessModal.style.display = 'flex';
   // Dashboard open logic (e.g., user icon click) can be added later
 
   document.getElementById('closeAISearch').onclick = () => aiSearchModal.style.display = 'none';
+  document.getElementById('closeAccess').onclick = () => accessModal.style.display = 'none';
   document.getElementById('closeDashboard').onclick = () => dashboardModal.style.display = 'none';
   document.getElementById('closePoll').onclick = () => pollModal.style.display = 'none';
 
@@ -1522,94 +1531,168 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
+});
 
-  // --- AI SEARCH LOGIC ---
-  // 1. Resource Index (sample, expand as needed)
-  const resources = [
-    { title: 'Learning Disabilities', description: 'Difficulties with reading, writing, math, or processing information.', link: '#conditions' },
-    { title: 'Professional Counselling', description: 'One-on-one therapy sessions with specialized therapists.', link: '#support' },
-    { title: 'Support Groups', description: 'Guided group sessions and discussions for individuals.', link: '#support' },
-    { title: 'Educational Support', description: 'Effective learning strategies and accommodations.', link: '#support' },
-    { title: 'Educational Materials', description: 'Learning strategies, study techniques, and guides.', link: '#resources' },
-    { title: 'Contact Us', description: 'Get in touch with our team for help.', link: '#contact' },
-    { title: 'About Cognitive Disabilities', description: 'Learn about cognitive disabilities and our mission.', link: '#about' },
-    // Add more resources as needed
-  ];
+// --- AI SEARCH LOGIC ---
+function getAllSearchableItems() {
+  // Gather all resource/article/support data from the DOM
+  const items = [];
+  // Cognitive Conditions
+  document.querySelectorAll('.services-list > div, .conditions .services-list > div').forEach(div => {
+    const title = div.querySelector('h2')?.innerText || '';
+    const desc = div.querySelector('p')?.innerText || '';
+    const link = div.querySelector('a')?.href || '';
+    if (title && link) items.push({ title, desc, link });
+  });
+  // Support Services
+  document.querySelectorAll('.portfolio-content .row').forEach(row => {
+    const title = row.querySelector('h5')?.innerText || '';
+    const desc = row.querySelector('p')?.innerText || '';
+    const link = row.querySelector('a')?.href || '';
+    if (title && link) items.push({ title, desc, link });
+  });
+  // About/Info Cards
+  document.querySelectorAll('.about-text .info-card').forEach(card => {
+    const title = card.querySelector('h3')?.innerText || '';
+    const desc = card.querySelector('p')?.innerText || '';
+    if (title) items.push({ title, desc, link: '' });
+  });
+  return items;
+}
 
-  // 2. Fuzzy Search Logic
-  function fuzzyMatch(query, text) {
-    query = query.toLowerCase();
-    text = text.toLowerCase();
-    let score = 0;
-    if (text.includes(query)) score += 10;
-    // Simple: +1 for each matching char in order
-    let lastIndex = -1;
-    for (let char of query) {
-      let idx = text.indexOf(char, lastIndex + 1);
-      if (idx > lastIndex) {
-        score += 1;
-        lastIndex = idx;
-      }
-    }
-    return score;
-  }
+function fuzzyMatch(str, query) {
+  str = str.toLowerCase();
+  query = query.toLowerCase();
+  if (str.includes(query)) return true;
+  // Simple fuzzy: all query words must appear in str
+  return query.split(' ').every(q => str.includes(q));
+}
 
-  const aiSearchInput = aiSearchModal.querySelector('.ai-search-input');
-  const aiSearchResults = aiSearchModal.querySelector('.ai-search-results');
-  let currentSuggestion = -1;
-  let currentSuggestions = [];
+function searchItems(query) {
+  if (!query) return [];
+  const items = getAllSearchableItems();
+  return items.filter(item =>
+    fuzzyMatch(item.title, query) || fuzzyMatch(item.desc, query)
+  ).slice(0, 8); // Limit to 8 results
+}
 
-  aiSearchInput.setAttribute('role', 'combobox');
-  aiSearchInput.setAttribute('aria-autocomplete', 'list');
-  aiSearchResults.setAttribute('role', 'listbox');
-
-  aiSearchInput.addEventListener('input', function() {
-    const query = this.value.trim();
-    aiSearchResults.innerHTML = '';
-    currentSuggestion = -1;
-    if (!query) return;
-    // Fuzzy search and sort
-    const matches = resources
-      .map(r => ({ ...r, score: fuzzyMatch(query, r.title + ' ' + r.description) }))
-      .filter(r => r.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 5);
-    currentSuggestions = matches;
-    if (matches.length === 0) {
-      aiSearchResults.innerHTML = '<div class="no-results">No results found.</div>';
+// Attach search logic to AI search modal
+function setupAISearchModal() {
+  const input = document.querySelector('.ai-search-input');
+  const resultsDiv = document.querySelector('.ai-search-results');
+  if (!input || !resultsDiv) return;
+  input.addEventListener('input', function() {
+    const query = input.value.trim();
+    const results = searchItems(query);
+    if (!query) {
+      resultsDiv.innerHTML = '<em>Type to search resources, support, and more...</em>';
       return;
     }
-    matches.forEach((r, i) => {
-      const item = document.createElement('div');
-      item.className = 'ai-search-suggestion';
-      item.setAttribute('role', 'option');
-      item.setAttribute('tabindex', '-1');
-      item.innerHTML = `<strong>${r.title}</strong><br><span style='font-size:0.95em;color:#555'>${r.description}</span>`;
-      item.onclick = () => {
-        aiSearchModal.style.display = 'none';
-        window.location.hash = r.link;
-      };
-      aiSearchResults.appendChild(item);
-    });
-  });
-
-  // Keyboard navigation
-  aiSearchInput.addEventListener('keydown', function(e) {
-    const items = aiSearchResults.querySelectorAll('.ai-search-suggestion');
-    if (!items.length) return;
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      currentSuggestion = (currentSuggestion + 1) % items.length;
-      items.forEach((el, idx) => el.classList.toggle('active', idx === currentSuggestion));
-      items[currentSuggestion].focus();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      currentSuggestion = (currentSuggestion - 1 + items.length) % items.length;
-      items.forEach((el, idx) => el.classList.toggle('active', idx === currentSuggestion));
-      items[currentSuggestion].focus();
-    } else if (e.key === 'Enter' && currentSuggestion >= 0) {
-      e.preventDefault();
-      items[currentSuggestion].click();
+    if (results.length === 0) {
+      resultsDiv.innerHTML = '<em>No results found.</em>';
+      return;
     }
+    resultsDiv.innerHTML = results.map(item =>
+      `<div class="ai-search-result animated-card">
+        <strong>${item.title}</strong><br>
+        <span style="font-size:0.95em;color:#444;">${item.desc.slice(0, 90)}${item.desc.length > 90 ? '...' : ''}</span><br>
+        ${item.link ? `<a href="${item.link}" target="_blank" class="unified-btn" style="margin-top:6px;">Open</a>` : ''}
+      </div>`
+    ).join('');
+  });
+}
+document.addEventListener('DOMContentLoaded', setupAISearchModal);
+
+
+function getCardId(card) {
+  // Use title+link as unique id
+  const title = card.querySelector('h2,h5,h3')?.innerText || '';
+  const link = card.querySelector('a')?.href || '';
+  return title + '|' + link;
+}
+
+function getBookmarks() {
+  return JSON.parse(localStorage.getItem('bookmarks') || '[]');
+}
+function setBookmarks(arr) {
+  localStorage.setItem('bookmarks', JSON.stringify(arr));
+}
+function toggleBookmark(card) {
+  const id = getCardId(card);
+  let bookmarks = getBookmarks();
+  if (bookmarks.includes(id)) {
+    bookmarks = bookmarks.filter(b => b !== id);
+  } else {
+    bookmarks.push(id);
+  }
+  setBookmarks(bookmarks);
+  updateBookmarkBtnState(card.querySelector('.bookmark-btn'), card);
+}
+function updateBookmarkBtnState(btn, card) {
+  const id = getCardId(card);
+  const bookmarks = getBookmarks();
+  btn.style.opacity = bookmarks.includes(id) ? '1' : '0.5';
+  btn.querySelector('i').style.color = bookmarks.includes(id) ? '#FFD700' : '#fff';
+}
+
+// Progress tracker: mark viewed cards
+function markCardViewed(card) {
+  const id = getCardId(card);
+  let viewed = JSON.parse(localStorage.getItem('viewed') || '[]');
+  if (!viewed.includes(id)) {
+    viewed.push(id);
+    localStorage.setItem('viewed', JSON.stringify(viewed));
+  }
+}
+function getViewedCount() {
+  return JSON.parse(localStorage.getItem('viewed') || '[]').length;
+}
+function getTotalTrackable() {
+  // Count all unique cards
+  const all = new Set();
+  document.querySelectorAll('.services-list > div, .conditions .services-list > div, .portfolio-content .row').forEach(card => {
+    all.add(getCardId(card));
+  });
+  return all.size;
+}
+
+// Update dashboard modal content
+function updateDashboardContent() {
+  const dash = document.querySelector('.dashboard-content');
+  if (!dash) return;
+  // Bookmarks
+  const bookmarks = getBookmarks();
+  let bookmarkHtml = '';
+  if (bookmarks.length === 0) {
+    bookmarkHtml = '<em>No bookmarks yet.</em>';
+  } else {
+    bookmarkHtml = '<ul style="padding-left:0;list-style:none;">' +
+      bookmarks.map(id => {
+        const [title, link] = id.split('|');
+        return `<li style="margin-bottom:10px;"><a href="${link}" target="_blank" class="unified-btn" style="padding:6px 16px;">${title}</a></li>`;
+      }).join('') + '</ul>';
+  }
+  // Progress
+  const viewed = getViewedCount();
+  const total = getTotalTrackable();
+  const percent = total ? Math.round((viewed/total)*100) : 0;
+  dash.innerHTML = `
+    <h3 style="margin-bottom:10px;">Bookmarked Resources</h3>
+    ${bookmarkHtml}
+    <h3 style="margin:20px 0 10px;">Progress Tracker</h3>
+    <div class="progress-bar"><div class="progress-bar-inner" style="width:${percent}%;background:linear-gradient(90deg,#012290f7 60%,#4A90E2 100%);"></div></div>
+    <div style="font-size:1.1em;">You've explored <b>${viewed}</b> of <b>${total}</b> resources/services (${percent}%)</div>
+  `;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  addBookmarkButtons();
+  updateDashboardContent();
+  // Mark cards as viewed on click
+  document.querySelectorAll('.services-list > div, .conditions .services-list > div, .portfolio-content .row').forEach(card => {
+    card.addEventListener('click', function() {
+      markCardViewed(card);
+      updateDashboardContent();
+    });
   });
 });
