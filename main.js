@@ -1492,6 +1492,7 @@ document.addEventListener('DOMContentLoaded', function () {
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     transition: 'background-color 0.3s, color 0.3s',
   });
+  //---AI Search Button Font Color---
   aiSearchBtn.addEventListener('mouseenter', () => {
     aiSearchBtn.style.backgroundColor = '#fff';
     aiSearchBtn.style.color = '#fff';
