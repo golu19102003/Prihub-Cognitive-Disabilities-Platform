@@ -192,7 +192,7 @@ function updateUIForLoggedInUser(user) {
             <div class="dropdown-menu">
                 <a href="#profile">Profile</a>
                 <a href="#settings">Settings</a>
-                <button onclick="handleLogout()">Logout</button>
+                <a href="handleLogout()">Logout</a>
             </div>
         </div>
     `;
