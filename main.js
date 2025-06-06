@@ -1472,118 +1472,168 @@ window.addEventListener('scroll', function() {
   }
 });
 
-// --- ADVANCED FEATURE WIDGETS & MODALS ---
-document.addEventListener('DOMContentLoaded', function() {
-  // Floating AI Search Button (bottom right, above chat icon)
+document.addEventListener('DOMContentLoaded', function () {
+  // --- Floating AI Search Button ---
   let aiSearchBtn = document.createElement('button');
   aiSearchBtn.className = 'floating-btn ai-search-btn';
   aiSearchBtn.title = 'AI Search';
   aiSearchBtn.innerHTML = '<i class="fas fa-search"></i>';
-  aiSearchBtn.style.position = 'fixed';
-  aiSearchBtn.style.right = '18px';
-  aiSearchBtn.style.top = '280px';
-  aiSearchBtn.style.zIndex = '1200';
+  Object.assign(aiSearchBtn.style, {
+    position: 'fixed',
+    right: '18px',
+    top: '275px',
+    zIndex: '1200',
+    borderRadius: '50%',
+    backgroundColor: '#fff',
+    color: '#fff',
+    width: '50px',
+    height: '50px',
+    cursor: 'pointer',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    transition: 'background-color 0.3s, color 0.3s',
+  });
+  aiSearchBtn.addEventListener('mouseenter', () => {
+    aiSearchBtn.style.backgroundColor = '#fff';
+    aiSearchBtn.style.color = '#fff';
+  });
+  aiSearchBtn.addEventListener('mouseleave', () => {
+    aiSearchBtn.style.backgroundColor = '#fff';
+    aiSearchBtn.style.color = '#fff';
+  });
   document.body.appendChild(aiSearchBtn);
 
-
-  // --- Modals ---
-  // AI Search Modal
+  // --- AI Search Modal ---
   let aiSearchModal = document.createElement('div');
   aiSearchModal.className = 'modal ai-search-modal';
-  aiSearchModal.innerHTML = `<div class="modal-content"><span class="close" id="closeAISearch">&times;</span><h2>AI Search</h2><input type="text" placeholder="Type to search..." class="ai-search-input"><div class="ai-search-results">(Suggestions will appear here)</div></div>`;
+  Object.assign(aiSearchModal.style, {
+    display: 'none',
+    position: 'fixed',
+    zIndex: '1300',
+    left: '0',
+    top: '0',
+    width: '100%',
+    height: '100%',
+    overflow: 'auto',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  });
+
+  let modalContent = document.createElement('div');
+  Object.assign(modalContent.style, {
+    backgroundColor: '#fefefe',
+    margin: 'auto',
+    padding: '20px',
+    border: '1px solid #888',
+    width: '80%',
+    maxWidth: '600px',
+    borderRadius: '8px',
+    position: 'relative',
+    animation: 'fadeInModal 0.3s',
+  });
+
+  let closeBtn = document.createElement('span');
+  closeBtn.innerHTML = '&times;';
+  Object.assign(closeBtn.style, {
+    color: '#aaa',
+    position: 'absolute',
+    top: '10px',
+    right: '20px',
+    fontSize: '28px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+  });
+  closeBtn.addEventListener('mouseenter', () => {
+    closeBtn.style.color = '#000';
+  });
+  closeBtn.addEventListener('mouseleave', () => {
+    closeBtn.style.color = '#aaa';
+  });
+  closeBtn.onclick = () => {
+    aiSearchModal.style.display = 'none';
+  };
+
+  let modalTitle = document.createElement('h2');
+  modalTitle.textContent = 'AI Search';
+
+  let searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Type to search...';
+  searchInput.className = 'ai-search-input';
+  Object.assign(searchInput.style, {
+    width: '100%',
+    padding: '12px 20px',
+    margin: '10px 0',
+    boxSizing: 'border-box',
+    border: '2px solid #ccc',
+    borderRadius: '4px',
+    fontSize: '16px',
+  });
+
+  let resultsDiv = document.createElement('div');
+  resultsDiv.className = 'ai-search-results';
+  Object.assign(resultsDiv.style, {
+    maxHeight: '300px',
+    overflowY: 'auto',
+    marginTop: '10px',
+  });
+  resultsDiv.innerHTML = '<em>Type to search resources, support, and more...</em>';
+
+  modalContent.appendChild(closeBtn);
+  modalContent.appendChild(modalTitle);
+  modalContent.appendChild(searchInput);
+  modalContent.appendChild(resultsDiv);
+  aiSearchModal.appendChild(modalContent);
   document.body.appendChild(aiSearchModal);
 
-  // Accessibility Widget Modal
-  let accessModal = document.createElement('div');
-  accessModal.className = 'modal access-modal';
-  accessModal.innerHTML = `<div class="modal-content"><span class="close" id="closeAccess">&times;</span><h2>Accessibility Tools</h2><button class="unified-btn">Check Contrast</button><button class="unified-btn">Font Size</button><button class="unified-btn">Dyslexia Mode</button></div>`;
-  document.body.appendChild(accessModal);
+  // --- Event Listener to Open Modal ---
+  aiSearchBtn.onclick = () => {
+    aiSearchModal.style.display = 'flex';
+  };
 
-  // Dashboard Modal
-  let dashboardModal = document.createElement('div');
-  dashboardModal.className = 'modal dashboard-modal';
-  dashboardModal.innerHTML = `<div class="modal-content"><span class="close" id="closeDashboard">&times;</span><h2>Your Dashboard</h2><div class="dashboard-content">(Personalized info, progress, favorites, etc. will appear here)</div></div>`;
-  document.body.appendChild(dashboardModal);
-
-  // Quick Poll Modal
-  let pollModal = document.createElement('div');
-  pollModal.className = 'modal poll-modal';
-  pollModal.innerHTML = `<div class="modal-content"><span class="close" id="closePoll">&times;</span><h2>Quick Poll</h2><p>Was this page helpful?</p><button class="unified-btn">Yes</button><button class="unified-btn">No</button></div>`;
-  document.body.appendChild(pollModal);
-
-  // --- Event Listeners for opening/closing modals ---
-  aiSearchBtn.onclick = () => aiSearchModal.style.display = 'flex';
-  accessWidgetBtn.onclick = () => accessModal.style.display = 'flex';
-  // Dashboard open logic (e.g., user icon click) can be added later
-
-  document.getElementById('closeAISearch').onclick = () => aiSearchModal.style.display = 'none';
-  document.getElementById('closeAccess').onclick = () => accessModal.style.display = 'none';
-  document.getElementById('closeDashboard').onclick = () => dashboardModal.style.display = 'none';
-  document.getElementById('closePoll').onclick = () => pollModal.style.display = 'none';
-
-  // --- PWA Service Worker Registration ---
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-      }, function(err) {
-        console.log('ServiceWorker registration failed: ', err);
-      });
+  // --- AI SEARCH LOGIC ---
+  function getAllSearchableItems() {
+    const items = [];
+    document.querySelectorAll('.services-list > div, .conditions .services-list > div').forEach(div => {
+      const title = div.querySelector('h2')?.innerText || '';
+      const desc = div.querySelector('p')?.innerText || '';
+      const link = div.querySelector('a')?.href || '';
+      if (title && link) items.push({ title, desc, link });
     });
+    document.querySelectorAll('.portfolio-content .row').forEach(row => {
+      const title = row.querySelector('h5')?.innerText || '';
+      const desc = row.querySelector('p')?.innerText || '';
+      const link = row.querySelector('a')?.href || '';
+      if (title && link) items.push({ title, desc, link });
+    });
+    document.querySelectorAll('.about-text .info-card').forEach(card => {
+      const title = card.querySelector('h3')?.innerText || '';
+      const desc = card.querySelector('p')?.innerText || '';
+      if (title) items.push({ title, desc, link: '' });
+    });
+    return items;
   }
-});
 
-// --- AI SEARCH LOGIC ---
-function getAllSearchableItems() {
-  // Gather all resource/article/support data from the DOM
-  const items = [];
-  // Cognitive Conditions
-  document.querySelectorAll('.services-list > div, .conditions .services-list > div').forEach(div => {
-    const title = div.querySelector('h2')?.innerText || '';
-    const desc = div.querySelector('p')?.innerText || '';
-    const link = div.querySelector('a')?.href || '';
-    if (title && link) items.push({ title, desc, link });
-  });
-  // Support Services
-  document.querySelectorAll('.portfolio-content .row').forEach(row => {
-    const title = row.querySelector('h5')?.innerText || '';
-    const desc = row.querySelector('p')?.innerText || '';
-    const link = row.querySelector('a')?.href || '';
-    if (title && link) items.push({ title, desc, link });
-  });
-  // About/Info Cards
-  document.querySelectorAll('.about-text .info-card').forEach(card => {
-    const title = card.querySelector('h3')?.innerText || '';
-    const desc = card.querySelector('p')?.innerText || '';
-    if (title) items.push({ title, desc, link: '' });
-  });
-  return items;
-}
+  function fuzzyMatch(str, query) {
+    str = str.toLowerCase();
+    query = query.toLowerCase();
+    if (str.includes(query)) return true;
+    return query.split(' ').every(q => str.includes(q));
+  }
 
-function fuzzyMatch(str, query) {
-  str = str.toLowerCase();
-  query = query.toLowerCase();
-  if (str.includes(query)) return true;
-  // Simple fuzzy: all query words must appear in str
-  return query.split(' ').every(q => str.includes(q));
-}
+  function searchItems(query) {
+    if (!query) return [];
+    const items = getAllSearchableItems();
+    return items.filter(item =>
+      fuzzyMatch(item.title, query) || fuzzyMatch(item.desc, query)
+    ).slice(0, 8);
+  }
 
-function searchItems(query) {
-  if (!query) return [];
-  const items = getAllSearchableItems();
-  return items.filter(item =>
-    fuzzyMatch(item.title, query) || fuzzyMatch(item.desc, query)
-  ).slice(0, 8); // Limit to 8 results
-}
-
-// Attach search logic to AI search modal
-function setupAISearchModal() {
-  const input = document.querySelector('.ai-search-input');
-  const resultsDiv = document.querySelector('.ai-search-results');
-  if (!input || !resultsDiv) return;
-  input.addEventListener('input', function() {
-    const query = input.value.trim();
+  // --- Attach Search Logic ---
+  searchInput.addEventListener('input', function () {
+    const query = searchInput.value.trim();
     const results = searchItems(query);
+    resultsDiv.innerHTML = '';
     if (!query) {
       resultsDiv.innerHTML = '<em>Type to search resources, support, and more...</em>';
       return;
@@ -1592,107 +1642,59 @@ function setupAISearchModal() {
       resultsDiv.innerHTML = '<em>No results found.</em>';
       return;
     }
-    resultsDiv.innerHTML = results.map(item =>
-      `<div class="ai-search-result animated-card">
+    results.forEach((item, index) => {
+      const resultItem = document.createElement('div');
+      Object.assign(resultItem.style, {
+        padding: '10px',
+        borderBottom: '1px solid #eee',
+        cursor: 'pointer',
+        opacity: '0',
+        transform: 'translateY(10px)',
+        animation: `fadeInUp 0.3s ease forwards`,
+        animationDelay: `${index * 0.05}s`,
+      });
+      resultItem.innerHTML = `
         <strong>${item.title}</strong><br>
         <span style="font-size:0.95em;color:#444;">${item.desc.slice(0, 90)}${item.desc.length > 90 ? '...' : ''}</span><br>
-        ${item.link ? `<a href="${item.link}" target="_blank" class="unified-btn" style="margin-top:6px;">Open</a>` : ''}
-      </div>`
-    ).join('');
-  });
-}
-document.addEventListener('DOMContentLoaded', setupAISearchModal);
-
-
-function getCardId(card) {
-  // Use title+link as unique id
-  const title = card.querySelector('h2,h5,h3')?.innerText || '';
-  const link = card.querySelector('a')?.href || '';
-  return title + '|' + link;
-}
-
-function getBookmarks() {
-  return JSON.parse(localStorage.getItem('bookmarks') || '[]');
-}
-function setBookmarks(arr) {
-  localStorage.setItem('bookmarks', JSON.stringify(arr));
-}
-function toggleBookmark(card) {
-  const id = getCardId(card);
-  let bookmarks = getBookmarks();
-  if (bookmarks.includes(id)) {
-    bookmarks = bookmarks.filter(b => b !== id);
-  } else {
-    bookmarks.push(id);
-  }
-  setBookmarks(bookmarks);
-  updateBookmarkBtnState(card.querySelector('.bookmark-btn'), card);
-}
-function updateBookmarkBtnState(btn, card) {
-  const id = getCardId(card);
-  const bookmarks = getBookmarks();
-  btn.style.opacity = bookmarks.includes(id) ? '1' : '0.5';
-  btn.querySelector('i').style.color = bookmarks.includes(id) ? '#FFD700' : '#fff';
-}
-
-// Progress tracker: mark viewed cards
-function markCardViewed(card) {
-  const id = getCardId(card);
-  let viewed = JSON.parse(localStorage.getItem('viewed') || '[]');
-  if (!viewed.includes(id)) {
-    viewed.push(id);
-    localStorage.setItem('viewed', JSON.stringify(viewed));
-  }
-}
-function getViewedCount() {
-  return JSON.parse(localStorage.getItem('viewed') || '[]').length;
-}
-function getTotalTrackable() {
-  // Count all unique cards
-  const all = new Set();
-  document.querySelectorAll('.services-list > div, .conditions .services-list > div, .portfolio-content .row').forEach(card => {
-    all.add(getCardId(card));
-  });
-  return all.size;
-}
-
-// Update dashboard modal content
-function updateDashboardContent() {
-  const dash = document.querySelector('.dashboard-content');
-  if (!dash) return;
-  // Bookmarks
-  const bookmarks = getBookmarks();
-  let bookmarkHtml = '';
-  if (bookmarks.length === 0) {
-    bookmarkHtml = '<em>No bookmarks yet.</em>';
-  } else {
-    bookmarkHtml = '<ul style="padding-left:0;list-style:none;">' +
-      bookmarks.map(id => {
-        const [title, link] = id.split('|');
-        return `<li style="margin-bottom:10px;"><a href="${link}" target="_blank" class="unified-btn" style="padding:6px 16px;">${title}</a></li>`;
-      }).join('') + '</ul>';
-  }
-  // Progress
-  const viewed = getViewedCount();
-  const total = getTotalTrackable();
-  const percent = total ? Math.round((viewed/total)*100) : 0;
-  dash.innerHTML = `
-    <h3 style="margin-bottom:10px;">Bookmarked Resources</h3>
-    ${bookmarkHtml}
-    <h3 style="margin:20px 0 10px;">Progress Tracker</h3>
-    <div class="progress-bar"><div class="progress-bar-inner" style="width:${percent}%;background:linear-gradient(90deg,#012290f7 60%,#4A90E2 100%);"></div></div>
-    <div style="font-size:1.1em;">You've explored <b>${viewed}</b> of <b>${total}</b> resources/services (${percent}%)</div>
-  `;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  addBookmarkButtons();
-  updateDashboardContent();
-  // Mark cards as viewed on click
-  document.querySelectorAll('.services-list > div, .conditions .services-list > div, .portfolio-content .row').forEach(card => {
-    card.addEventListener('click', function() {
-      markCardViewed(card);
-      updateDashboardContent();
+        ${item.link ? `<a href="${item.link}" target="_blank" class="unified-btn" style="
+    margin-top: 6px;
+    color: #FFFFFF;
+    background-color: #1E90FF;
+    padding: 8px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    min-width: 100px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+  "
+  onmouseover="this.style.backgroundColor='#0d6efd'"
+  onmouseout="this.style.backgroundColor='#1E90FF'">Open</a>` : ''}
+      `;
+      resultsDiv.appendChild(resultItem);
     });
   });
+
+  // --- Keyframes for Animations ---
+  const styleSheet = document.createElement('style');
+  styleSheet.type = 'text/css';
+  styleSheet.innerText = `
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
+  document.head.appendChild(styleSheet);
 });
