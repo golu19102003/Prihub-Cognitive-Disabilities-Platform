@@ -207,40 +207,7 @@ async function handleLogout() {
         showNotification(error.message, 'error');
     }
 }
-document.addEventListener('DOMContentLoaded', function () {
-  const dropdownItems = document.querySelectorAll('.dropdown-menu a, .dropdown-menu button');
 
-  dropdownItems.forEach(item => {
-    // Apply base styling
-    Object.assign(item.style, {
-      display: 'block',
-      padding: '10px 16px',
-      margin: '6px 0',
-      width: '100%',
-      borderRadius: '8px',
-      backgroundColor: '#ffffff',
-      color: '#012290f7',
-      fontSize: '1rem',
-      textAlign: 'left',
-      border: '2px solid #012290f7',
-      textDecoration: 'none',
-      cursor: 'pointer',
-      fontWeight: '500',
-      transition: 'background-color 0.2s ease, color 0.2s ease',
-    });
-
-    // Handle hover effect
-    item.addEventListener('mouseenter', () => {
-      item.style.backgroundColor = '#012290f7';
-      item.style.color = '#ffffff';
-    });
-
-    item.addEventListener('mouseleave', () => {
-      item.style.backgroundColor = '#ffffff';
-      item.style.color = '#012290f7';
-    });
-  });
-});
 function resetAuthButtons() {
     const authButtons = document.querySelector('.auth-buttons');
     authButtons.innerHTML = `
