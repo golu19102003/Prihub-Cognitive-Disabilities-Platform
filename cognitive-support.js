@@ -73,17 +73,13 @@ class CognitiveSupport {
                             <i class="fas fa-sticky-note"></i>
                             Quick Notes
                         </button>
-                        <button class="support-btn" id="reminder">
-                            <i class="fas fa-bell"></i>
-                            Set Reminder
-                        </button>
                     </div>
                 </div>
             </div>
             <div class="notes-panel" id="notesPanel" hidden>
                 <div class="notes-header">
                     <h4>Quick Notes</h4>
-                    <button class="close-btn" id="closeNotes">×</button>
+                    <button class="close-btn" style="width:25px; height:25px;"id="closeNotes">×</button>
                 </div>
                 <textarea id="notesArea" placeholder="Type your notes here..."></textarea>
                 <button class="save-btn" id="saveNotes">Save Notes</button>

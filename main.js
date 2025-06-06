@@ -155,46 +155,76 @@ document.addEventListener('DOMContentLoaded', function() {
 // Add styles for accessibility features
 const style = document.createElement('style');
 style.textContent = `
+  html {
+    box-sizing: border-box;
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  body {
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: #fff;
+    color: #222;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    transition: background 0.4s, color 0.4s;
+  }
   .text-size-controls {
     position: fixed;
     top: 100px;
     left: 10px;
-    background: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.95);
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     z-index: 1000;
+    display: flex;
+    gap: 8px;
   }
-  
   .text-size-controls button {
-    margin: 0 5px 0 5px;
-    padding: 5px 10px;
-    border: 1px solid #4A90E2;
-    background: white;
-    border-radius: 3px;
+    margin: 0;
+    padding: 7px 14px;
+    border: none;
+    background: linear-gradient(90deg, #012290f7 60%, #4A90E2 100%);
+    color: #fff;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
   }
-  
+  .text-size-controls button:hover {
+    background: linear-gradient(90deg, #4A90E2 45%, #012290f7 100%);
+    transform: scale(1.08);
+  }
   .reading-guide {
     position: absolute;
     left: 0;
     right: 0;
     height: 40px;
-    background: rgba(255,255,0,0.1);
+    background: rgba(255,255,0,0.13);
     pointer-events: none;
     z-index: 999;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
-  
   .error-message {
     color: #fff;
-    font-size: 0.9em;
-    margin-top: 5px;
+    background: #e74c3c;
+    font-size: 0.95em;
+    margin-top: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(231,76,60,0.08);
   }
-  
   [aria-invalid="true"] {
-    border-color: #fff !important;
+    border-color: #e74c3c !important;
+    background: #fff6f6 !important;
   }
-
   .quick-access-bar {
     position: fixed;
     left: 10px;
@@ -202,28 +232,68 @@ style.textContent = `
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    background: #012290f7;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    gap: 12px;
+    background: linear-gradient(90deg, #012290f7 10%, #4A90E2 50%, transparent 100%);
+    padding: 14px 10px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.13);
     z-index: 999;
   }
-
+  .quick-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.13);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .quick-btn:hover, .quick-btn.active {
+    background: #fff;
+    color: #012290f7;
+    transform: scale(1.13);
+  }
+  .dark-mode {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    color: #f5f7fa;
+  }
+  .dark-mode .header {
+    background: #232526;
+  }
+  .dyslexic-font {
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+  }
   .emergency-button {
     position: fixed;
     left: 10px;
     bottom: 30px;
     z-index: 1100;
+    background: linear-gradient(90deg, #e74c3c 60%, #ff7675 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(231,76,60,0.13);
+    transition: background 0.2s, transform 0.2s;
   }
-
+  .emergency-button:hover {
+    background: linear-gradient(90deg, #ff7675 60%, #e74c3c 100%);
+    transform: scale(1.07);
+  }
   .chat-icon {
     position: fixed;
     right: 10px;
     bottom: 80px;
     z-index: 1100;
   }
-
   .cognitive-support-container {
     position: fixed;
     right: 10px;
@@ -232,11 +302,120 @@ style.textContent = `
     z-index: 1000;
   }
 
+  /* Responsive Styles */
+  @media (max-width: 1024px) {
+    .quick-access-bar {
+      left: 6px;
+      padding: 10px 6px;
+      border-radius: 10px;
+    }
+    .text-size-controls {
+      top: 70px;
+      left: 6px;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+  }
+  @media (max-width: 768px) {
+    html {
+      font-size: 15px;
+    }
+    .quick-access-bar {
+      left: 2px;
+      top: auto;
+      bottom: 70px;
+      transform: none;
+      flex-direction: row;
+      gap: 8px;
+      padding: 8px 4px;
+      border-radius: 8px;
+    }
+    .text-size-controls {
+      top: auto;
+      bottom: 120px;
+      left: 2px;
+      flex-direction: row;
+      gap: 6px;
+      padding: 6px 6px;
+      border-radius: 6px;
+    }
+    .emergency-button {
+      left: 2px;
+      bottom: 10px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 6px;
+    }
+    .top {
+      right: 10px;
+      bottom: 10px;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+    }
+  }
+  @media (max-width: 480px) {
+    html {
+      font-size: 14px;
+    }
+    .quick-access-bar, .text-size-controls {
+      left: 0;
+      right: 0;
+      width: 100vw;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 4px 0;
+      gap: 4px;
+      justify-content: center;
+    }
+    .quick-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }
+    .emergency-button {
+      left: 0;
+      right: 0;
+      width: 100vw;
+      border-radius: 0;
+      padding: 8px 0;
+      font-size: 0.98rem;
+    }
+    .top {
+      right: 6px;
+      bottom: 6px;
+      width: 34px;
+      height: 34px;
+      font-size: 1rem;
+    }
+  }
   .top {
     position: fixed;
-    right: 20px;
-    bottom: 17px;
+    right: 18px;
+    bottom: 20px;
     z-index: 1100;
+    background: linear-gradient(135deg, #012290f7 60%, #4A90E2 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 16px rgba(1,34,144,0.18), 0 1.5px 6px rgba(0,0,0,0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.25s, transform 0.18s, box-shadow 0.18s;
+    opacity: 0.95;
+    cursor: pointer;
+    outline: none;
+  }
+  .top:hover, .top:focus {
+    background: linear-gradient(135deg, #4A90E2 30%, #012290f7 100%);
+    color: #fff;
+    transform: scale(1.13) translateY(-4px);
+    box-shadow: 0 8px 24px rgba(1,34,144,0.22), 0 2px 8px rgba(0,0,0,0.13);
+    opacity: 1;
   }
 `;
 document.head.appendChild(style);
@@ -1260,3 +1439,177 @@ function setupContactFormAutoSave() {
   });
 }
 document.addEventListener('DOMContentLoaded', setupContactFormAutoSave);
+
+// Ensure only one .top button exists and is appended to the end of body
+function ensureScrollTopButton() {
+  let topBtn = document.querySelector('.top');
+  if (!topBtn) {
+    topBtn = document.createElement('a');
+    topBtn.className = 'top';
+    topBtn.href = '#';
+    topBtn.innerHTML = "<i class='bx bx-up-arrow-alt'></i>";
+    topBtn.onclick = function(e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    document.body.appendChild(topBtn);
+  } else {
+    document.body.appendChild(topBtn); // move to end if not already
+  }
+}
+document.addEventListener('DOMContentLoaded', ensureScrollTopButton);
+// Update scroll event logic for consistent visibility
+window.addEventListener('scroll', function() {
+  const topButton = document.querySelector('.top');
+  if (window.scrollY > 300) {
+    topButton.style.opacity = '1';
+    topButton.style.pointerEvents = 'auto';
+    topButton.style.display = 'flex';
+  } else {
+    topButton.style.opacity = '0';
+    topButton.style.pointerEvents = 'none';
+    topButton.style.display = 'flex';
+  }
+});
+
+// --- ADVANCED FEATURE WIDGETS & MODALS ---
+document.addEventListener('DOMContentLoaded', function() {
+  // Floating AI Search Button (bottom right, above chat icon)
+  let aiSearchBtn = document.createElement('button');
+  aiSearchBtn.className = 'floating-btn ai-search-btn';
+  aiSearchBtn.title = 'AI Search';
+  aiSearchBtn.innerHTML = '<i class="fas fa-search"></i>';
+  aiSearchBtn.style.position = 'fixed';
+  aiSearchBtn.style.right = '18px';
+  aiSearchBtn.style.top = '275px';
+  aiSearchBtn.style.zIndex = '1200';
+  document.body.appendChild(aiSearchBtn);
+
+  // --- Modals ---
+  // AI Search Modal
+  let aiSearchModal = document.createElement('div');
+  aiSearchModal.className = 'modal ai-search-modal';
+  aiSearchModal.innerHTML = `<div class="modal-content"><span class="close" id="closeAISearch">&times;</span><h2>AI Search</h2><input type="text" placeholder="Type to search..." class="ai-search-input"><div class="ai-search-results">(Suggestions will appear here)</div></div>`;
+  document.body.appendChild(aiSearchModal);
+
+  // Dashboard Modal
+  let dashboardModal = document.createElement('div');
+  dashboardModal.className = 'modal dashboard-modal';
+  dashboardModal.innerHTML = `<div class="modal-content"><span class="close" id="closeDashboard">&times;</span><h2>Your Dashboard</h2><div class="dashboard-content">(Personalized info, progress, favorites, etc. will appear here)</div></div>`;
+  document.body.appendChild(dashboardModal);
+
+  // Quick Poll Modal
+  let pollModal = document.createElement('div');
+  pollModal.className = 'modal poll-modal';
+  pollModal.innerHTML = `<div class="modal-content"><span class="close" id="closePoll">&times;</span><h2>Quick Poll</h2><p>Was this page helpful?</p><button class="unified-btn">Yes</button><button class="unified-btn">No</button></div>`;
+  document.body.appendChild(pollModal);
+
+  // --- Event Listeners for opening/closing modals ---
+  aiSearchBtn.onclick = () => aiSearchModal.style.display = 'flex';
+  // Dashboard open logic (e.g., user icon click) can be added later
+
+  document.getElementById('closeAISearch').onclick = () => aiSearchModal.style.display = 'none';
+  document.getElementById('closeDashboard').onclick = () => dashboardModal.style.display = 'none';
+  document.getElementById('closePoll').onclick = () => pollModal.style.display = 'none';
+
+  // --- PWA Service Worker Registration ---
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+
+  // --- AI SEARCH LOGIC ---
+  // 1. Resource Index (sample, expand as needed)
+  const resources = [
+    { title: 'Learning Disabilities', description: 'Difficulties with reading, writing, math, or processing information.', link: '#conditions' },
+    { title: 'Professional Counselling', description: 'One-on-one therapy sessions with specialized therapists.', link: '#support' },
+    { title: 'Support Groups', description: 'Guided group sessions and discussions for individuals.', link: '#support' },
+    { title: 'Educational Support', description: 'Effective learning strategies and accommodations.', link: '#support' },
+    { title: 'Educational Materials', description: 'Learning strategies, study techniques, and guides.', link: '#resources' },
+    { title: 'Contact Us', description: 'Get in touch with our team for help.', link: '#contact' },
+    { title: 'About Cognitive Disabilities', description: 'Learn about cognitive disabilities and our mission.', link: '#about' },
+    // Add more resources as needed
+  ];
+
+  // 2. Fuzzy Search Logic
+  function fuzzyMatch(query, text) {
+    query = query.toLowerCase();
+    text = text.toLowerCase();
+    let score = 0;
+    if (text.includes(query)) score += 10;
+    // Simple: +1 for each matching char in order
+    let lastIndex = -1;
+    for (let char of query) {
+      let idx = text.indexOf(char, lastIndex + 1);
+      if (idx > lastIndex) {
+        score += 1;
+        lastIndex = idx;
+      }
+    }
+    return score;
+  }
+
+  const aiSearchInput = aiSearchModal.querySelector('.ai-search-input');
+  const aiSearchResults = aiSearchModal.querySelector('.ai-search-results');
+  let currentSuggestion = -1;
+  let currentSuggestions = [];
+
+  aiSearchInput.setAttribute('role', 'combobox');
+  aiSearchInput.setAttribute('aria-autocomplete', 'list');
+  aiSearchResults.setAttribute('role', 'listbox');
+
+  aiSearchInput.addEventListener('input', function() {
+    const query = this.value.trim();
+    aiSearchResults.innerHTML = '';
+    currentSuggestion = -1;
+    if (!query) return;
+    // Fuzzy search and sort
+    const matches = resources
+      .map(r => ({ ...r, score: fuzzyMatch(query, r.title + ' ' + r.description) }))
+      .filter(r => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+    currentSuggestions = matches;
+    if (matches.length === 0) {
+      aiSearchResults.innerHTML = '<div class="no-results">No results found.</div>';
+      return;
+    }
+    matches.forEach((r, i) => {
+      const item = document.createElement('div');
+      item.className = 'ai-search-suggestion';
+      item.setAttribute('role', 'option');
+      item.setAttribute('tabindex', '-1');
+      item.innerHTML = `<strong>${r.title}</strong><br><span style='font-size:0.95em;color:#555'>${r.description}</span>`;
+      item.onclick = () => {
+        aiSearchModal.style.display = 'none';
+        window.location.hash = r.link;
+      };
+      aiSearchResults.appendChild(item);
+    });
+  });
+
+  // Keyboard navigation
+  aiSearchInput.addEventListener('keydown', function(e) {
+    const items = aiSearchResults.querySelectorAll('.ai-search-suggestion');
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      currentSuggestion = (currentSuggestion + 1) % items.length;
+      items.forEach((el, idx) => el.classList.toggle('active', idx === currentSuggestion));
+      items[currentSuggestion].focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      currentSuggestion = (currentSuggestion - 1 + items.length) % items.length;
+      items.forEach((el, idx) => el.classList.toggle('active', idx === currentSuggestion));
+      items[currentSuggestion].focus();
+    } else if (e.key === 'Enter' && currentSuggestion >= 0) {
+      e.preventDefault();
+      items[currentSuggestion].click();
+    }
+  });
+});
